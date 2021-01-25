@@ -89,7 +89,7 @@ func drawString(bgColor, fgColor color.Color, font *truetype.Font, fontSize floa
 	c.SetFontSize(fontSize)
 	c.SetFont(font)
 
-	p, err := c.DrawString(str, fixed.Point26_6{X: 0, Y: bb.Max.Y})
+	p, err := c.DrawString(str, fixed.Point26_6{X: 0, Y: bb.Max.Y + 72})
 	if err != nil {
 		return nil, err
 	}
