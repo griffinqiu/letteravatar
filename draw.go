@@ -30,10 +30,7 @@ var defaultLetterColor = color.RGBA{0xf0, 0xf0, 0xf0, 0xf0}
 
 // Draw generates a new letter-avatar image of the given size using the given letter
 // with the given options. Default parameters are used if a nil *Options is passed.
-func Draw(size int, letters []rune, options *Options) (image.Image, error) {
-	if len(letters) > 2 {
-		letters = letters[0:2]
-	}
+func Draw(width, height int, fontSize float64, letters []rune, options *Options) (image.Image, error) {
 	font := defaultFont
 	if options != nil && options.Font != nil {
 		font = options.Font
@@ -58,19 +55,11 @@ func Draw(size int, letters []rune, options *Options) (image.Image, error) {
 		}
 	}
 
-	return drawAvatar(bgColor, letterColor, font, size, letters)
+	return drawAvatar(bgColor, letterColor, font, width, height, fontSize, letters)
 }
 
-func drawAvatar(bgColor, fgColor color.Color, font *truetype.Font, size int, letters []rune) (image.Image, error) {
-	dst := newRGBA(size, size, bgColor)
-
-	var fontSize float64
-	if len(letters) == 1 {
-		fontSize = float64(size) * 0.6
-	} else {
-		fontSize = float64(size) * 0.4
-	}
-
+func drawAvatar(bgColor, fgColor color.Color, font *truetype.Font, width, height int, fontSize float64, letters []rune) (image.Image, error) {
+	dst := newRGBA(width, height, bgColor)
 	src, err := drawString(bgColor, fgColor, font, fontSize, letters)
 	if err != nil {
 		return nil, err
@@ -88,10 +77,7 @@ func drawString(bgColor, fgColor color.Color, font *truetype.Font, fontSize floa
 	c.SetDPI(72)
 
 	bb := font.Bounds(c.PointToFixed(fontSize))
-	w := (bb.Max.X.Ceil() - bb.Min.X.Floor())
-	if len(letters) == 2 {
-		w = w * 2
-	}
+	w := (bb.Max.X.Ceil() - bb.Min.X.Floor()) * len(letters)
 	h := bb.Max.Y.Ceil() - bb.Min.Y.Floor()
 
 	dst := newRGBA(w, h, bgColor)
