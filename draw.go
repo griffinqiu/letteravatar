@@ -76,7 +76,7 @@ func drawString(bgColor, fgColor color.Color, font *truetype.Font, fontSize floa
 	c := freetype.NewContext()
 	c.SetDPI(72)
 
-	bb := font.Bounds(c.PointToFixed(fontSize))
+	bb := font.Bounds(c.PointToFixed(fontSize + 10))
 	w := (bb.Max.X.Ceil() - bb.Min.X.Floor()) * len(letters)
 	h := bb.Max.Y.Ceil() - bb.Min.Y.Floor()
 
